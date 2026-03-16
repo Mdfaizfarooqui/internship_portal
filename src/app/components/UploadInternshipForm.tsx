@@ -238,7 +238,7 @@ export function UploadInternshipForm({ onClose }: UploadInternshipFormProps) {
                                     name="stipend"
                                     value={formData.stipend}
                                     onChange={handleChange}
-                                    placeholder="e.g. $2000/month, Unpaid"
+                                    placeholder="e.g. ₹20,000/month, Unpaid"
                                     className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
                                 />
                             </div>

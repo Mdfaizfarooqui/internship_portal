@@ -1,4 +1,4 @@
-import { MapPin, Clock, DollarSign, Bookmark } from "lucide-react";
+import { MapPin, Clock, Bookmark } from "lucide-react";
 
 export function TrendingInternships() {
   const internships = [
@@ -9,7 +9,7 @@ export function TrendingInternships() {
       position: "Software Engineering Intern",
       location: "San Francisco, CA",
       duration: "3 months",
-      stipend: "$2,500/month",
+      stipend: "₹20,000/month",
       type: "Full-time",
       tags: ["React", "Node.js", "AWS"],
       applicants: 124,
@@ -21,7 +21,7 @@ export function TrendingInternships() {
       position: "Data Science Intern",
       location: "New York, NY",
       duration: "6 months",
-      stipend: "$3,000/month",
+      stipend: "₹25,000/month",
       type: "Full-time",
       tags: ["Python", "ML", "SQL"],
       applicants: 89,
@@ -33,7 +33,7 @@ export function TrendingInternships() {
       position: "UI/UX Design Intern",
       location: "Remote",
       duration: "4 months",
-      stipend: "$2,000/month",
+      stipend: "₹15,000/month",
       type: "Part-time",
       tags: ["Figma", "Adobe XD", "Prototyping"],
       applicants: 156,
@@ -45,7 +45,7 @@ export function TrendingInternships() {
       position: "Digital Marketing Intern",
       location: "Austin, TX",
       duration: "3 months",
-      stipend: "$1,800/month",
+      stipend: "₹12,000/month",
       type: "Full-time",
       tags: ["SEO", "Social Media", "Analytics"],
       applicants: 67,
@@ -57,7 +57,7 @@ export function TrendingInternships() {
       position: "Cloud Infrastructure Intern",
       location: "Seattle, WA",
       duration: "6 months",
-      stipend: "$2,800/month",
+      stipend: "₹22,000/month",
       type: "Full-time",
       tags: ["AWS", "Docker", "Kubernetes"],
       applicants: 92,
@@ -69,7 +69,7 @@ export function TrendingInternships() {
       position: "Mobile Development Intern",
       location: "Boston, MA",
       duration: "4 months",
-      stipend: "$2,400/month",
+      stipend: "₹18,000/month",
       type: "Full-time",
       tags: ["React Native", "iOS", "Android"],
       applicants: 103,
@@ -132,7 +132,7 @@ export function TrendingInternships() {
                   <span className="text-green-400">{internship.type}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-400 text-sm">
-                  <DollarSign size={16} className="text-cyan-400" />
+                  <span className="text-cyan-400 font-bold text-base">₹</span>
                   <span className="text-white font-semibold">{internship.stipend}</span>
                 </div>
               </div>
