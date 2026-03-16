@@ -1,0 +1,35 @@
+services:
+  # PHP Backend — deployed as a Docker web service
+  - type: web
+    name: internhub-backend
+    runtime: docker
+    dockerfilePath: ./backend_php/Dockerfile
+    dockerContext: ./backend_php
+    envVars:
+      - key: DB_HOST
+        sync: false   # Set this in Render dashboard (from your MySQL provider)
+      - key: DB_NAME
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure random value
+
+  # React Frontend — deployed as a static site
+  - type: web
+    name: internhub-frontend
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: internhub-backend
+          type: web
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

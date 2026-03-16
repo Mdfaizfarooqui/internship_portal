@@ -1,8 +1,8 @@
 // API Configuration
 // Update this based on your backend server configuration
 export const API_BASE_URL = import.meta.env.DEV
-  ? 'http://localhost:8000' // PHP backend development server
-  : '/backend'; // Production path
+  ? 'http://localhost:8000'  // Local PHP backend
+  : (import.meta.env.VITE_API_URL || '/api'); // Render backend URL (set as env var)
 
 /**
  * Make API calls to the backend

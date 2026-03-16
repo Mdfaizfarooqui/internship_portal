@@ -22,7 +22,7 @@ Thumbs.db
 desktop.ini
 
 # PHP / Backend
-backend_php/config/database.php
+# (database.php is now env-var-based, safe to commit)
 
 # Uploadeed files / logs
 backend_php/uploads/
