@@ -19,7 +19,20 @@ class Database {
         $this->conn = null;
 
         try {
-            $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8";
+            // Support custom ports for cloud databases like Aiven
+            $port = 3306;
+            $host = $this->host;
+            
+            if (strpos($this->host, ':') !== false) {
+                $parts = explode(':', $this->host);
+                $host = $parts[0];
+                $port = $parts[1];
+            } else {
+                $env_port = getenv('DB_PORT');
+                if ($env_port) $port = $env_port;
+            }
+
+            $dsn = "mysql:host=" . $host . ";port=" . $port . ";dbname=" . $this->db_name . ";charset=utf8";
             $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
