@@ -46,11 +46,14 @@ class ResumeController {
         try {
             $this->db->beginTransaction();
 
-            // 1. Check if Base Resume profile exists
+            // Check if Base Resume profile exists
             $stmt = $this->db->prepare("SELECT id FROM resumes WHERE user_id = :user_id LIMIT 1");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Auto-patch missing summary column for older database schemas
+            try { $this->db->exec("ALTER TABLE resumes ADD COLUMN summary TEXT"); } catch (Exception $e) {}
             
             if($row) {
                 $resume_id = $row['id'];
@@ -68,8 +71,8 @@ class ResumeController {
                 $this->db->exec("DELETE FROM work_experience WHERE user_id = $user_id");
                 $this->db->exec("DELETE FROM certifications WHERE resume_id = $resume_id");
             } else {
-                // Create new basic resume shell
-                $stmt = $this->db->prepare("INSERT INTO resumes (user_id, summary) VALUES (:user_id, :summary)");
+                // Create new basic resume shell (title and content are NOT NULL in original schema)
+                $stmt = $this->db->prepare("INSERT INTO resumes (user_id, title, content, summary) VALUES (:user_id, 'My Built Resume', '', :summary)");
                 $summary = $data->personalInfo->summary ?? '';
                 $stmt->bindParam(':user_id', $user_id);
                 $stmt->bindParam(':summary', $summary);
@@ -100,13 +103,20 @@ class ResumeController {
             if (isset($data->education) && is_array($data->education)) {
                 $stmt = $this->db->prepare("INSERT INTO education (user_id, degree, institution, field_of_study, start_date, graduation_date, description) VALUES (:user_id, :degree, :institution, :field_of_study, :start_date, :graduation_date, :description)");
                 foreach($data->education as $edu) {
+                    $startDate = !empty($edu->startDate) ? $edu->startDate : null;
+                    if (isset($edu->endDate) && strpos($edu->endDate, '-') !== false) {
+                        $gradDate = (explode('-', $edu->endDate)[0]) . '-01-01'; // map year to full date format
+                    } else {
+                        $gradDate = null;
+                    }
+
                     $stmt->execute([
                         ':user_id' => $user_id,
                         ':degree' => $edu->degree ?? '',
                         ':institution' => $edu->institution ?? '',
                         ':field_of_study' => '',
-                        ':start_date' => $edu->startDate ?? null,
-                        ':graduation_date' => isset($edu->endDate) ? intval((explode('-', $edu->endDate)[0])) : null,
+                        ':start_date' => $startDate,
+                        ':graduation_date' => $gradDate,
                         ':description' => ''
                     ]);
                 }
@@ -121,8 +131,8 @@ class ResumeController {
                         ':company' => $exp->company ?? '',
                         ':position' => $exp->position ?? '',
                         ':description' => '',
-                        ':start_date' => $exp->startDate ?? null,
-                        ':end_date' => $exp->endDate ?? null
+                        ':start_date' => !empty($exp->startDate) ? $exp->startDate : '2000-01-01',
+                        ':end_date' => !empty($exp->endDate) ? $exp->endDate : null
                     ]);
                 }
             }
@@ -156,7 +166,7 @@ class ResumeController {
         } catch (Exception $e) {
             $this->db->rollBack();
             http_response_code(503);
-            echo json_encode(["success" => false, "message" => "Unable to save resume.", "error" => $e->getMessage()]);
+            echo json_encode(["success" => false, "message" => "Unable to save resume. " . $e->getMessage(), "error" => $e->getMessage()]);
         }
     }
 
