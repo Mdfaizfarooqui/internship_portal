@@ -10,6 +10,9 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // instead of breaking the response with HTML like <br /> <b>Warning</b>
 ini_set('display_errors', 0);
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    if ($errno === E_DEPRECATED || $errno === E_USER_DEPRECATED || $errno === E_NOTICE || $errno === E_WARNING) {
+        return false; // let PHP handle it silently since display_errors=0
+    }
     http_response_code(500);
     echo json_encode([
         "success" => false, 

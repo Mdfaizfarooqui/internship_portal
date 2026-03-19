@@ -4,6 +4,8 @@ include_once __DIR__ . '/../models/Resume.php';
 
 class ResumeController {
     
+    private $db;
+    private $resume;
     private $education;
     private $experience;
     private $skill;
