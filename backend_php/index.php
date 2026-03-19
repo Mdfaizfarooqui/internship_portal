@@ -6,6 +6,29 @@ header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+// Force all PHP errors/warnings and uncaught exceptions to return JSON
+// instead of breaking the response with HTML like <br /> <b>Warning</b>
+ini_set('display_errors', 0);
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    http_response_code(500);
+    echo json_encode([
+        "success" => false, 
+        "message" => "PHP Error: $errstr", 
+        "details" => "Line $errline in " . basename($errfile)
+    ]);
+    exit;
+});
+
+set_exception_handler(function($e) {
+    http_response_code(500);
+    echo json_encode([
+        "success" => false, 
+        "message" => "Exception: " . $e->getMessage(), 
+        "details" => "Line " . $e->getLine() . " in " . basename($e->getFile())
+    ]);
+    exit;
+});
+
 // Handle Preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
