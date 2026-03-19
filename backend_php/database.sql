@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS work_experience (
 -- Internships table
 CREATE TABLE IF NOT EXISTS internships (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     company VARCHAR(255) NOT NULL,
     position VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -72,7 +73,8 @@ CREATE TABLE IF NOT EXISTS internships (
     responsibilities TEXT,
     posted_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deadline DATE,
-    status VARCHAR(50) DEFAULT 'Active'
+    status VARCHAR(50) DEFAULT 'Active',
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Internship Skills table
