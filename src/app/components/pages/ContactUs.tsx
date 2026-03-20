@@ -11,13 +11,13 @@ export function ContactUs() {
     {
       icon: Phone,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      link: "tel:+15551234567",
+      value: "9664991223",
+      link: "tel:9664991223",
     },
     {
       icon: MapPin,
       title: "Office",
-      value: "123 Innovation Street, San Francisco, CA 94102",
+      value: "vapi gujarat",
       link: "#",
     },
   ];
